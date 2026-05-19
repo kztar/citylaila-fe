@@ -6,8 +6,10 @@ const repo = "citylaila-fe";
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
-  basePath:    isProd ? `/${repo}` : "",
-  assetPrefix: isProd ? `/${repo}/` : "",
+  // basePath:    isProd ? `/${repo}` : "",
+  basePath: "",
+  // assetPrefix: isProd ? `/${repo}/` : "",
+  assetPrefix: "",
   images: {
     unoptimized: true,
     remotePatterns: [
