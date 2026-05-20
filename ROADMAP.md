@@ -20,16 +20,7 @@ Tick items off (`[ ]` → `[x]`) and move them to the **Done** section when ship
 
 ## Open
 
-### F1. `/packages` page (Header → Packages tab)
-
-- **What**: Holiday-packages landing page
-- **Behaviour on the live site**: Clicking the **Packages** nav link goes to `https://www.citylaila.com/holidays`. The page reuses several homepage components (banners, deal carousels, etc.) but is package-focused rather than attractions-focused.
-- **What we need to build**:
-  - New route at `src/app/packages/page.tsx` (or `holidays/page.tsx` if we match the live URL — *decide before starting*).
-  - Reuse from homepage where possible: `HeroSection` (with a packages-specific banner), `SummerOffers`, `ExclusiveDealWide`, `TravelGuidesSection`, `PartnerLogosSection`, `StatsBar`, `TestimonialsSection`.
-  - New section variants needed: a holiday-package card (currently we have `AttractionCard` — packages have different metadata: nights, destinations, inclusions).
-  - Update [Header.tsx](src/components/Header.tsx) `navLinks` — the "Packages" entry currently points to `/packages`; align this with whichever route we ship.
-- **Dependencies**: None
+### ~~F1. `/packages` page (Header → Packages tab)~~ — moved to **Done** below ✅
 
 ### ~~F2. Search Page Template + `/search` route~~ — moved to **Done** below ✅
 
@@ -96,6 +87,31 @@ Recorded so we know not to "fix" them by faithfully matching the upstream:
 ---
 
 ## Done
+
+### F1. `/packages` page ✅ (2026-05-20, redesigned 2026-05-20 against `references/packages/`)
+
+- Route: [src/app/packages/page.tsx](src/app/packages/page.tsx) — server component with `metadata` (title, description, keywords).
+- **URL decision**: shipped as `/packages` (not `/holidays`). The Header `navLinks` entry already pointed to `/packages`; no header change needed.
+- **Section order** (5 sections, matches `references/packages/screenshot-scroll-{1,2,3}.png`):
+  1. **PackagesHero** — blue gradient hero. Two stacked blocks: (a) a white floating Search Now form (4 fields: Country / Date / Pax+Rooms / Nights, then Nationality + full-width `SEARCH NOW` button on the second row), (b) below it, a wide promo banner using `public/images/packages/hero-banner.webp` (copied from `references/packages/hero-banner.webp` — keep both in sync if the asset changes) with a right-aligned overlay text/CTA "UPTO 15% OFF / HOLIDAY PACKAGES / BOOK NOW". The global header's site-wide search strip is **hidden** on this route (`/packages` is in `HIDE_SEARCH_STRIP_ON` in `Header.tsx`).
+  2. **JackpotDealsCarousel** — "Jackpot deals on top selling packages - Save upto 35%" — `cl-carousel-shell` carousel of `cl-jackpot-card`s (4:5 aspect, full-bleed image with gradient + title overlay at the bottom).
+  3. **WorldDestinationsCarousel** — "Explore world's top destinations" — round/square-rounded image tiles with the country name **below** (no overlay text). 10 destinations: Thailand, Japan, Vietnam, Turkey, Saudi Arabia, Mauritius, Uzbekistan, Egypt, UAE, Bali.
+  4. **HappyClientsSection** — "Our happy clients" — `Row`/`Col` 4-up **grid** (not a carousel), each card has a dark-navy bg with a circular avatar at top and quote + client name (orange) below.
+  5. **ReadingCornerCarousel** — "Reading Corner" — carousel of blog cards (image + title with an orange underline accent). 6 sample posts pulled from blog.citylaila.com.
+- Data: [src/data/packages.ts](src/data/packages.ts) — `HolidayPackage` interface (`name`, `slug`, `destinations[]`, `nights`, `days`, `image`, `priceFrom`, `currency`, `originalPrice?`, `discountPercent?`, `featured?`). 9 packages following the live-site naming pattern "X Nights Y Days … Holiday in <Country>".
+- New components:
+  - [src/components/PackagesHero.tsx](src/components/PackagesHero.tsx) — `"use client"`. State for country/date/pax/nights/nationality; `onSubmit` is a stub (`console.log` + `preventDefault`) since no search backend exists.
+  - [src/components/JackpotDealsCarousel.tsx](src/components/JackpotDealsCarousel.tsx) — `"use client"`. Native horizontal scroll + `.cl-carousel-shell` edge-overlay arrows. Reads from `packages.ts`.
+  - [src/components/WorldDestinationsCarousel.tsx](src/components/WorldDestinationsCarousel.tsx) — `"use client"`. Inline destinations array (10 items linking to `/search?q=<country>`).
+  - [src/components/HappyClientsSection.tsx](src/components/HappyClientsSection.tsx) — server component. Inline `clients` array (4 entries).
+  - [src/components/ReadingCornerCarousel.tsx](src/components/ReadingCornerCarousel.tsx) — `"use client"`. Inline `posts` array (6 entries).
+- CSS: ~180 lines in [globals.css](src/app/globals.css) for `.cl-packages-hero` (blue gradient bg), `.cl-packages-search` (floating white card), `.cl-packages-field` (icon-prefixed inline form fields), `.cl-packages-promo*`, `.cl-jackpot-card*`, `.cl-world-dest*`, `.cl-client-card*`, `.cl-reading-card*`.
+- **Deleted components** (no longer used): `PackageCard.tsx`, `HolidayPackagesSection.tsx`. Recover from git history if needed.
+- Notes / known gaps:
+  - `PackagesHero` `SEARCH NOW` submit is a UI stub — no backend search. Could later push to `/search?country=…&nights=…` once the search page supports those params.
+  - Jackpot deal cards link to `/packages/[slug]` (detail page doesn't exist yet — same forward-looking pattern as `AttractionCard`).
+  - World-destination tiles all link to `/search?q=<country>`. Result quality depends on the underlying `attractions.ts` data covering those countries.
+- Build verification: `npm run build` ✓ — 18 static pages.
 
 ### F2. Search Page Template + `/search` route ✅ (2026-05-20, redesigned 2026-05-20)
 

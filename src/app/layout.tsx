@@ -25,9 +25,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="d-flex flex-column min-vh-100">
         <Header />
-        <main className="flex-grow-1" style={{ paddingTop: "110px" }}>
-          {children}
-        </main>
+        <main className="flex-grow-1">{children}</main>
         <Footer />
       </body>
     </html>

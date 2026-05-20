@@ -1,0 +1,145 @@
+export interface HolidayPackage {
+  id: string;
+  name: string;
+  slug: string;
+  destinations: string[];
+  nights: number;
+  days: number;
+  image: string;
+  priceFrom: number;
+  currency: string;
+  originalPrice?: number;
+  discountPercent?: number;
+  featured?: boolean;
+}
+
+const CDN = "https://d3gvlpbdidhqp.cloudfront.net";
+
+export const packages: HolidayPackage[] = [
+  {
+    id: "pkg1",
+    name: "5 Nights 6 Days Exotic Holiday in Vietnam",
+    slug: "5n-exotic-holiday-vietnam",
+    destinations: ["Vietnam"],
+    nights: 5,
+    days: 6,
+    image: `${CDN}//assets/img/images/Bangkok.webp`,
+    priceFrom: 1899,
+    currency: "AED",
+    originalPrice: 2899,
+    discountPercent: 35,
+    featured: true,
+  },
+  {
+    id: "pkg2",
+    name: "7 Nights 8 Days Dreamy Holiday in Vietnam",
+    slug: "7n-dreamy-holiday-vietnam",
+    destinations: ["Vietnam"],
+    nights: 7,
+    days: 8,
+    image: `${CDN}//assets/img/images/Pattaya.webp`,
+    priceFrom: 2499,
+    currency: "AED",
+    originalPrice: 3699,
+    discountPercent: 32,
+    featured: true,
+  },
+  {
+    id: "pkg3",
+    name: "9 Nights 10 Days Package for Beautiful Vietnam",
+    slug: "9n-vietnam-package",
+    destinations: ["Vietnam"],
+    nights: 9,
+    days: 10,
+    image: `${CDN}//assets/img/images/Bali.webp`,
+    priceFrom: 3299,
+    currency: "AED",
+    originalPrice: 4699,
+    discountPercent: 30,
+    featured: true,
+  },
+  {
+    id: "pkg4",
+    name: "4 Nights 5 Days Holiday Package to Beautiful Egypt",
+    slug: "4n-egypt-holiday-package",
+    destinations: ["Egypt"],
+    nights: 4,
+    days: 5,
+    image: `${CDN}//assets/static-banner/WebsiteWiseContentImage//77/safari-in-dubai-deserts.webp`,
+    priceFrom: 1599,
+    currency: "AED",
+    originalPrice: 2299,
+    discountPercent: 30,
+    featured: true,
+  },
+  {
+    id: "pkg5",
+    name: "5 Nights 6 Days Exotic Holiday in Thailand",
+    slug: "5n-exotic-holiday-thailand",
+    destinations: ["Thailand"],
+    nights: 5,
+    days: 6,
+    image: `${CDN}//assets/img/images/Bangkok.webp`,
+    priceFrom: 1799,
+    currency: "AED",
+    originalPrice: 2599,
+    discountPercent: 31,
+    featured: true,
+  },
+  {
+    id: "pkg6",
+    name: "6 Nights 7 Days Bali Beach Getaway",
+    slug: "6n-bali-beach-getaway",
+    destinations: ["Bali"],
+    nights: 6,
+    days: 7,
+    image: `${CDN}//assets/img/images/Bali.webp`,
+    priceFrom: 2399,
+    currency: "AED",
+    originalPrice: 3499,
+    discountPercent: 31,
+    featured: true,
+  },
+  {
+    id: "pkg7",
+    name: "7 Nights 8 Days European Highlights",
+    slug: "7n-european-highlights",
+    destinations: ["London", "Paris"],
+    nights: 7,
+    days: 8,
+    image: `${CDN}//assets/img/images/London.webp`,
+    priceFrom: 5499,
+    currency: "AED",
+    originalPrice: 7999,
+    discountPercent: 31,
+    featured: true,
+  },
+  {
+    id: "pkg8",
+    name: "5 Nights 6 Days Dubai & Abu Dhabi Holiday",
+    slug: "5n-dubai-abu-dhabi",
+    destinations: ["Dubai", "Abu Dhabi"],
+    nights: 5,
+    days: 6,
+    image: `${CDN}//assets/img/images/Dubai.webp`,
+    priceFrom: 2299,
+    currency: "AED",
+    originalPrice: 3399,
+    discountPercent: 32,
+    featured: true,
+  },
+  {
+    id: "pkg9",
+    name: "4 Nights 5 Days Azerbaijan Discovery",
+    slug: "4n-azerbaijan-discovery",
+    destinations: ["Baku"],
+    nights: 4,
+    days: 5,
+    image: `${CDN}//assets/img/images/Baku.webp`,
+    priceFrom: 1599,
+    currency: "AED",
+    originalPrice: 2199,
+    discountPercent: 27,
+    featured: true,
+  },
+];

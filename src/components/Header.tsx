@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ShoppingCart, Menu, X, ChevronDown, Search } from "lucide-react";
 import { Container, Form, InputGroup, Button, Dropdown, Badge } from "react-bootstrap";
 import { cn } from "@/lib/utils";
@@ -60,6 +60,12 @@ export default function Header() {
   const [language, setLanguage] = useState(languages[0]);
   const [currency, setCurrency] = useState(currencies[0]);
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Routes that render their own search UI in the page body — hide the header's
+  // site-wide search strip on these so it doesn't duplicate.
+  const HIDE_SEARCH_STRIP_ON = ["/packages"];
+  const showSearchStrip = !HIDE_SEARCH_STRIP_ON.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -218,28 +224,30 @@ export default function Header() {
         </div>
       </Container>
 
-      {/* ── Search bar strip ── */}
-      <div className="cl-search-strip">
-        <Container>
-          <Form onSubmit={handleSearch}>
-            <InputGroup className="cl-search-group">
-              <InputGroup.Text className="cl-search-icon" aria-hidden="true">
-                <Search size={15} />
-              </InputGroup.Text>
-              <Form.Control
-                type="text"
-                value={query}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-                placeholder="Find your activities"
-                aria-label="Find your activities"
-              />
-              <Button type="submit" className="btn-cta cl-search-submit" aria-label="Search">
-                <Search size={18} />
-              </Button>
-            </InputGroup>
-          </Form>
-        </Container>
-      </div>
+      {/* ── Search bar strip (hidden on pages that render their own search UI) ── */}
+      {showSearchStrip && (
+        <div className="cl-search-strip">
+          <Container>
+            <Form onSubmit={handleSearch}>
+              <InputGroup className="cl-search-group">
+                <InputGroup.Text className="cl-search-icon" aria-hidden="true">
+                  <Search size={15} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={query}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+                  placeholder="Find your activities"
+                  aria-label="Find your activities"
+                />
+                <Button type="submit" className="btn-cta cl-search-submit" aria-label="Search">
+                  <Search size={18} />
+                </Button>
+              </InputGroup>
+            </Form>
+          </Container>
+        </div>
+      )}
 
       {/* ── Mobile drawer ── */}
       <div className={cn("cl-mobile-overlay d-lg-none", mobileOpen && "open")}>

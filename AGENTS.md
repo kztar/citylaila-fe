@@ -23,6 +23,9 @@ All reference files live in `references/`. Always consult these before writing o
 | `references/screenshot-scroll-5.png` | Testimonials continued + Footer |
 | `references/searchpage/screenshot-scroll-1.png` | Search results page — top: filter sidebar + Sort By + first 3 results |
 | `references/searchpage/screenshot-scroll-2.png` | Search results page — bottom: remaining results + pagination |
+| `references/packages/screenshot-scroll-1.png` | `/packages` — Search Now hero + start of Jackpot Deals carousel |
+| `references/packages/screenshot-scroll-2.png` | `/packages` — Explore world's top destinations + Our happy clients grid |
+| `references/packages/screenshot-scroll-3.png` | `/packages` — Reading Corner carousel + Footer start |
 
 ---
 
@@ -296,7 +299,7 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 
 | Component | File | Notes |
 |---|---|---|
-| Header | `src/components/Header.tsx` | Idiomatic react-bootstrap: `Form` + `InputGroup` (with `InputGroup.Text` icon prefix and inline submit `Button`) for search; `Button as={Link}` for login/sign-up (desktop + mobile); `Button variant="link"` with `Badge pill` for the cart counter; `Dropdown` for language + currency selectors (`.cl-header-dd` chrome); custom `.cl-header` (fixed position), `.cl-nav-link`, `.cl-mobile-drawer` |
+| Header | `src/components/Header.tsx` | Idiomatic react-bootstrap: `Form` + `InputGroup` (with `InputGroup.Text` icon prefix and inline submit `Button`) for search; `Button as={Link}` for login/sign-up (desktop + mobile); `Button variant="link"` with `Badge pill` for the cart counter; `Dropdown` for language + currency selectors (`.cl-header-dd` chrome); custom `.cl-header` (sticky-positioned), `.cl-nav-link`, `.cl-mobile-drawer`. **Search-strip is hidden on routes listed in `HIDE_SEARCH_STRIP_ON`** (currently `/packages` — those pages render their own search UI). Path-detection via `usePathname()`. |
 | HeroSection | `src/components/HeroSection.tsx` | `react-bootstrap` `Carousel` with `fade`, `interval={5000}`, real CDN banner images |
 | AwardBar | `src/components/AwardBar.tsx` | `Container` + flex utilities, 4 CDN review platform logos |
 | SummerOffers | `src/components/SummerOffers.tsx` | `Container` + `Row`/`Col` (xs=12/sm=4), 3 CDN promo banner cards |
@@ -313,6 +316,11 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | AttractionCard | `src/components/AttractionCard.tsx` | `.cl-card` wrapper, `.cl-pill-savings` (green, top), `.cl-pill-lpd` (orange, bottom-left), no tag pills |
 | SearchPageTemplate | `src/components/SearchPageTemplate.tsx` | Canonical listing template — client component. Left sidebar (refine-search input + `Accordion`: **Price** with dual-handle range slider above MIN/MAX inputs, **Popular Filters**, **Tour Category**) + right column (Sort By tab-bar + vertical list of `SearchResultRow` + Bootstrap `Pagination`, 20/page default). Manages all filter/sort/page state internally. Used by `/search`; reserved for F3 category-link pages. Props: `title`, `subtitle?`, `attractions`, `emptyMessage?`, `pageSize?`. |
 | SearchResultRow | `src/components/SearchResultRow.tsx` | Horizontal listing card used inside `SearchPageTemplate`. 3-column CSS Grid (180px image | content | 200px action). Title + ★rating + reviews + booked count + info pills (Description/Timings/Inclusion); right column shows "Get Instant Confirm" + From-price + strikethrough original + Book Now. Stacks vertically below `md`. |
+| PackagesHero | `src/components/PackagesHero.tsx` | `/packages` hero. Blue gradient bg. Two stacked blocks: (1) floating white search card (full-width) with 4 icon-prefixed `Form.Select`/`Form.Control` fields (Country / Date / Pax+Rooms / Nights) + Nationality + full-width `SEARCH NOW` button; (2) promo banner — local image [`public/images/packages/hero-banner.webp`](public/images/packages/hero-banner.webp) (served at `/images/packages/hero-banner.webp`, also copied from `references/packages/hero-banner.webp`) full-width with right-side text overlay "UPTO 15% OFF / HOLIDAY PACKAGES / BOOK NOW", a gradient mask ensures the text stays legible. State held in local `useState`; submit is a stub. |
+| JackpotDealsCarousel | `src/components/JackpotDealsCarousel.tsx` | "Jackpot deals on top selling packages - Save upto 35%" carousel for `/packages`. Reads `packages.ts`; renders `.cl-jackpot-card` (4:5 aspect, full-bleed image with gradient + title overlay at bottom) inside `cl-carousel-shell`. |
+| WorldDestinationsCarousel | `src/components/WorldDestinationsCarousel.tsx` | "Explore world's top destinations" carousel for `/packages`. `.cl-world-dest` tile = square-rounded image with country name **below** (no overlay text). Tiles link to `/search?q=<country>`. |
+| HappyClientsSection | `src/components/HappyClientsSection.tsx` | "Our happy clients" — `Row`/`Col` 4-up **grid** (not a carousel) of `.cl-client-card`s. Each card has dark-navy bg, circular avatar, white quote, orange client name. |
+| ReadingCornerCarousel | `src/components/ReadingCornerCarousel.tsx` | "Reading Corner" carousel for `/packages`. `.cl-reading-card` = image-on-top + title (2-line clamp) with an orange underline accent below. |
 | CategoryPills | `src/components/CategoryPills.tsx` | Bootstrap `sticky-top`, scrollable pill row, `btn-cta` for active state |
 
 ### Pages
@@ -325,6 +333,7 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | `/faqs` | `src/app/faqs/page.tsx` | `react-bootstrap` `Accordion` |
 | `/category/[slug]` | `src/app/category/[slug]/page.tsx` | `cl-page-hero` + `CategoryPills` + 4-col `Row`/`Col` grid |
 | `/search` | `src/app/search/page.tsx` (server, `metadata`) + `src/app/search/SearchResults.tsx` (client, `useSearchParams`) | Reads `?q=` and renders `SearchPageTemplate`. Wrapped in `<Suspense>` (required by Next 16 static export when consuming `useSearchParams`). |
+| `/packages` | `src/app/packages/page.tsx` | Holiday-packages landing page (matches `references/packages/screenshot-scroll-{1,2,3}.png`). Assembles 5 sections: `PackagesHero` → `JackpotDealsCarousel` → `WorldDestinationsCarousel` → `HappyClientsSection` (grid) → `ReadingCornerCarousel`. Data in `src/data/packages.ts`. |
 
 ### Homepage Section Order (implemented in `src/app/page.tsx`)
 
@@ -346,7 +355,7 @@ Sections are rendered in this exact order, matching the live site:
 
 ### Layout
 
-- `src/app/layout.tsx` uses `paddingTop: "110px"` (inline style) on `<main>` to clear the two-row fixed header (58px nav row + ~52px search strip).
+- `src/app/layout.tsx` no longer applies a `padding-top` offset. The `Header` uses `position: sticky; top: 0` (was `fixed`) so it occupies natural document flow — content below it doesn't need an offset, and the page works whether the search-strip is rendered or not (e.g. `/packages` hides it).
 
 ### Carousel library
 

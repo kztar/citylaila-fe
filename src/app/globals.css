@@ -106,8 +106,8 @@ a {
 
 /* ── Header ── */
 .cl-header {
-  position: fixed;
-  inset: 0 0 auto 0;
+  position: sticky;
+  top: 0;
   background: #fff;
   z-index: 1040;
   border-bottom: 1px solid #f1f1f1;
@@ -595,6 +595,264 @@ a {
 
 /* ── Aspect-ratio helper for offers ── */
 .cl-aspect-270-200 { aspect-ratio: 270/200; }
+
+/* ── Packages hero (search card on top + promo banner below) ── */
+.cl-packages-hero {
+  background: linear-gradient(135deg, #2a73c4 0%, #0b79c5 60%, #002248 100%);
+  padding: 2rem 0 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.cl-packages-search {
+  background: #fff;
+  border-radius: .75rem;
+  padding: .75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  margin-bottom: 1.5rem;
+}
+.cl-packages-search-row .cl-packages-field {
+  border-right: 1px solid var(--cl-border-light);
+}
+.cl-packages-search-row .cl-packages-field-last {
+  border-right: 0;
+}
+@media (max-width: 991px) {
+  .cl-packages-search-row .cl-packages-field { border-right: 0; border-bottom: 1px solid var(--cl-border-light); }
+  .cl-packages-search-row .cl-packages-field-last { border-bottom: 0; }
+}
+.cl-packages-field {
+  position: relative;
+  padding: .25rem .25rem .25rem 2rem;
+  display: flex;
+  align-items: center;
+}
+.cl-packages-field-bordered {
+  border: 1px solid var(--cl-border-light);
+  border-radius: .375rem;
+}
+.cl-packages-field-icon {
+  position: absolute;
+  left: .65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cl-primary);
+  pointer-events: none;
+}
+.cl-packages-field .form-control,
+.cl-packages-field .form-select {
+  border: 0;
+  background: transparent;
+  padding-left: 0;
+  font-size: 13px;
+  color: var(--cl-text-dark);
+  box-shadow: none;
+}
+.cl-packages-field .form-control:focus,
+.cl-packages-field .form-select:focus { box-shadow: none; }
+.cl-packages-search-submit {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  padding: .65rem 1rem;
+  border-radius: .375rem;
+  height: 100%;
+}
+
+/* Promo banner (tropical image + right-aligned overlay text) */
+.cl-packages-promo-banner {
+  position: relative;
+  border-radius: .75rem;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.cl-packages-promo-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 25%, rgba(0, 34, 72, .55) 60%, rgba(0, 34, 72, .8) 100%);
+  z-index: 1;
+}
+.cl-packages-promo-content {
+  position: relative;
+  z-index: 2;
+  padding: 1.75rem 2rem;
+  text-align: right;
+  max-width: 50%;
+}
+@media (max-width: 575px) {
+  .cl-packages-promo-banner { min-height: 180px; }
+  .cl-packages-promo-banner::after {
+    background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0, 34, 72, .75) 60%);
+  }
+  .cl-packages-promo-content { max-width: 100%; padding: 1.25rem; text-align: center; }
+}
+.cl-packages-promo-discount {
+  display: inline-block;
+  background: var(--cl-cta);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: .35rem .85rem;
+  border-radius: .25rem;
+  letter-spacing: .04em;
+}
+.cl-packages-promo-title {
+  color: #fff;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  margin: .65rem 0 1rem;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, .35);
+  line-height: 1.1;
+}
+.cl-packages-promo-cta {
+  font-weight: 700;
+  padding: .55rem 1.25rem;
+  border-radius: .375rem;
+}
+
+/* ── Jackpot deal card ── */
+.cl-jackpot-card {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(240px, 28vw, 320px);
+  aspect-ratio: 4 / 5;
+  border-radius: .75rem;
+  overflow: hidden;
+  color: inherit;
+}
+.cl-jackpot-card img { transition: transform .3s; }
+.cl-jackpot-card:hover img { transform: scale(1.05); }
+.cl-jackpot-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem 1rem .85rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, .85), rgba(0, 0, 0, 0));
+  z-index: 2;
+}
+.cl-jackpot-card-title {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── World destination tile (no overlay text) ── */
+.cl-world-dest {
+  flex: 0 0 auto;
+  width: clamp(120px, 14vw, 170px);
+  text-align: center;
+  color: inherit;
+}
+.cl-world-dest-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--cl-border-light);
+}
+.cl-world-dest-img img { transition: transform .3s; }
+.cl-world-dest:hover .cl-world-dest-img img { transform: scale(1.05); }
+.cl-world-dest-name {
+  margin: .65rem 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cl-text-dark);
+}
+.cl-world-dest:hover .cl-world-dest-name { color: var(--cl-primary); }
+
+/* ── Happy client card ── */
+.cl-client-card {
+  background: var(--cl-text-dark);
+  color: #fff;
+  border-radius: .75rem;
+  padding: 1.25rem 1rem 1rem;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cl-client-avatar {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .08);
+  border: 3px solid rgba(255, 255, 255, .15);
+  margin-bottom: 1rem;
+}
+.cl-client-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.cl-client-quote {
+  color: rgba(255, 255, 255, .8);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 .75rem;
+}
+.cl-client-name {
+  color: var(--cl-cta);
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ── Reading-corner blog card ── */
+.cl-reading-card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: clamp(240px, 26vw, 300px);
+  background: #fff;
+  border-radius: .5rem;
+  overflow: hidden;
+  color: inherit;
+  transition: box-shadow .2s, transform .2s;
+}
+.cl-reading-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+  transform: translateY(-2px);
+  color: inherit;
+}
+.cl-reading-card-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.cl-reading-card-img img { transition: transform .3s; }
+.cl-reading-card:hover .cl-reading-card-img img { transform: scale(1.05); }
+.cl-reading-card-body { padding: .85rem; }
+.cl-reading-card-title {
+  color: var(--cl-text-dark);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 .5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cl-reading-card-underline {
+  display: block;
+  width: 56px;
+  height: 3px;
+  background: var(--cl-cta);
+  border-radius: 2px;
+}
 
 /* ── Search page ── */
 .cl-search-page { background: var(--cl-bg-soft); min-height: 60vh; }
