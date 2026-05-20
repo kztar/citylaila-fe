@@ -31,17 +31,7 @@ Tick items off (`[ ]` → `[x]`) and move them to the **Done** section when ship
   - Update [Header.tsx](src/components/Header.tsx) `navLinks` — the "Packages" entry currently points to `/packages`; align this with whichever route we ship.
 - **Dependencies**: None
 
-### F2. Search Page Template + `/search` route
-
-- **What**: A reusable listing-style page that backs both the header search bar and several category-dropdown links (see F3).
-- **Behaviour on the live site**: Submitting "water sports" in the header search redirects to `https://www.citylaila.com/water%20sports-tours` and renders a listing of matching attractions.
-- **What we need to build**:
-  - New component `src/components/SearchPageTemplate.tsx` (name it once and reuse it everywhere — this is the canonical template).
-  - The template should accept props: `{ title, subtitle?, attractions: Attraction[], filters?, pagination? }`.
-  - New route `src/app/search/page.tsx` that reads `?q=...` from the URL, filters `attractions.ts`, and renders the template.
-  - The existing search handler in [Header.tsx](src/components/Header.tsx) already submits to `/search?q=…` — wire it through.
-- **Dependencies**: None. **F3 and any future listing pages depend on this.**
-- **Note on URL shape**: the live site uses path-style URLs (`/water%20sports-tours`) for some searches. Decide whether we replicate that or just use `/search?q=…`. The simpler `?q=` is recommended.
+### ~~F2. Search Page Template + `/search` route~~ — moved to **Done** below ✅
 
 ### F3. Category-dropdown destination pages (Header → All Categories ▾)
 
@@ -107,4 +97,22 @@ Recorded so we know not to "fix" them by faithfully matching the upstream:
 
 ## Done
 
-*(empty — move items here as they ship, with the commit hash or PR link)*
+### F2. Search Page Template + `/search` route ✅ (2026-05-20, redesigned 2026-05-20)
+
+- Canonical reusable listing template: [src/components/SearchPageTemplate.tsx](src/components/SearchPageTemplate.tsx) — client component (needs interactive state)
+  - Props: `title`, `subtitle?`, `attractions`, `emptyMessage?`, `pageSize?` (default **20**).
+  - Layout (matches live citylaila.com search page per `references/searchpage/`):
+    - **Left sidebar** (`Col md=4 lg=3`, sticky): "Search Your Tour" input + Bootstrap `Accordion` with three sections — **Price** (MIN/MAX number inputs), **Popular Filters** (checkboxes: Today Available, Instant Confirm — stub, not yet wired to data), **Tour Category** (checkboxes generated from categories present in the result set).
+    - **Right column** (`Col md=8 lg=9`): subtle title/subtitle, **Sort By** inline-tab bar (Most Popular / Lowest Price / Highest Price / Recommended — active option filled with dark navy), vertical list of `SearchResultRow`s, **pagination** (Bootstrap `Pagination` with first/last + current ± 1 + ellipses, only shown when `totalPages > 1`).
+  - Internal state: `filterText`, `priceMin/Max`, `popularFilters: Set<string>`, `selectedCategories: Set<string>`, `sortBy`, `page`. All filter changes reset `page` to 1.
+  - Sort handlers: `popular` & `recommended` → bookedCount desc; `price-asc`/`price-desc` → priceFrom.
+- Card component: [src/components/SearchResultRow.tsx](src/components/SearchResultRow.tsx) — grid (180px image | content | 200px action column). Title, ★rating + reviews + booked count, three pill links (Description / Timings / Inclusion — visual only for now, link to attraction-detail page), "Get Instant Confirm" badge (orange ⚡), "From" + price + strikethrough original + "Book Now" CTA.
+- Route: [src/app/search/page.tsx](src/app/search/page.tsx) — server component, exports `metadata`, wraps `<SearchResults />` in `<Suspense>` (required by Next 16 + static export when using `useSearchParams`).
+- Client component: [src/app/search/SearchResults.tsx](src/app/search/SearchResults.tsx) — reads `?q=…` via `useSearchParams()`, tokenises the query (`split /\s+/`) and does a "contains-all" match across `name`, `category` (de-slugged), `city`, and `tags`. Renders the template with a results-count subtitle.
+- URL shape: settled on `/search?q=…` (recommended option from the original spec); we did **not** mirror the live site's `/water%20sports-tours` path style.
+- Wired up: the header search handler already pushes to `/search?q=…`; no change needed.
+- Notes / known gaps:
+  - **Popular Filters checkboxes are visual stubs** — `Attraction` doesn't have `instantConfirm` / `availableToday` fields yet, so toggling them currently has no effect. Add those fields (or wire to a synthetic rule) when needed.
+  - The sidebar "Search Your Tour" input narrows results **on top of** the URL `?q=` (additive, not URL-syncing). Decide later whether to push back to URL.
+  - "Description / Timings / Inclusion" pills on each card are visual only; will become real anchors when F3.d (Attraction Detail Page) lands.
+- Build verification: `npm run build` ✓ — 17 static pages.

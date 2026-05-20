@@ -21,6 +21,8 @@ All reference files live in `references/`. Always consult these before writing o
 | `references/screenshot-scroll-3.png` | Exclusive Deal (wide cards) + Travel Guides & Trending Experiences |
 | `references/screenshot-scroll-4.png` | More blog posts + Ticket Seller Partners + Musement at a glance + Loved by Travellers |
 | `references/screenshot-scroll-5.png` | Testimonials continued + Footer |
+| `references/searchpage/screenshot-scroll-1.png` | Search results page — top: filter sidebar + Sort By + first 3 results |
+| `references/searchpage/screenshot-scroll-2.png` | Search results page — bottom: remaining results + pagination |
 
 ---
 
@@ -309,6 +311,8 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | TestimonialsSection | `src/components/TestimonialsSection.tsx` | `react-bootstrap` `Carousel` with 2 review cards per slide, dark navy `cl-bg-dark` background |
 | Footer | `src/components/Footer.tsx` | `cl-footer` **white** background (testimonials above is dark navy — they must read as distinct sections), `Row`/`Col` 4-column layout, CDN logo image, dark text, blue contact icons |
 | AttractionCard | `src/components/AttractionCard.tsx` | `.cl-card` wrapper, `.cl-pill-savings` (green, top), `.cl-pill-lpd` (orange, bottom-left), no tag pills |
+| SearchPageTemplate | `src/components/SearchPageTemplate.tsx` | Canonical listing template — client component. Left sidebar (refine-search input + `Accordion`: Price / Popular Filters / Tour Category) + right column (Sort By tab-bar + vertical list of `SearchResultRow` + Bootstrap `Pagination`, 20/page default). Manages all filter/sort/page state internally. Used by `/search`; reserved for F3 category-link pages. Props: `title`, `subtitle?`, `attractions`, `emptyMessage?`, `pageSize?`. |
+| SearchResultRow | `src/components/SearchResultRow.tsx` | Horizontal listing card used inside `SearchPageTemplate`. 3-column CSS Grid (180px image | content | 200px action). Title + ★rating + reviews + booked count + info pills (Description/Timings/Inclusion); right column shows "Get Instant Confirm" + From-price + strikethrough original + Book Now. Stacks vertically below `md`. |
 | CategoryPills | `src/components/CategoryPills.tsx` | Bootstrap `sticky-top`, scrollable pill row, `btn-cta` for active state |
 
 ### Pages
@@ -320,6 +324,7 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | `/contact-us` | `src/app/contact-us/page.tsx` | `react-bootstrap` `Form` (`Form.Control`, `Form.Select`), 4 office cards |
 | `/faqs` | `src/app/faqs/page.tsx` | `react-bootstrap` `Accordion` |
 | `/category/[slug]` | `src/app/category/[slug]/page.tsx` | `cl-page-hero` + `CategoryPills` + 4-col `Row`/`Col` grid |
+| `/search` | `src/app/search/page.tsx` (server, `metadata`) + `src/app/search/SearchResults.tsx` (client, `useSearchParams`) | Reads `?q=` and renders `SearchPageTemplate`. Wrapped in `<Suspense>` (required by Next 16 static export when consuming `useSearchParams`). |
 
 ### Homepage Section Order (implemented in `src/app/page.tsx`)
 
