@@ -68,6 +68,23 @@ export default function SearchPageTemplate({
     [attractions]
   );
 
+  // Price-slider bounds derived from the current attraction set
+  const priceRange = useMemo(() => {
+    if (attractions.length === 0) return { min: 0, max: 1000 };
+    const prices = attractions.map((a) => a.priceFrom);
+    return {
+      min: Math.floor(Math.min(...prices)),
+      max: Math.ceil(Math.max(...prices)),
+    };
+  }, [attractions]);
+
+  // Slider values default to the bounds when the corresponding input is empty
+  const sliderMin = priceMin === "" ? priceRange.min : priceMin;
+  const sliderMax = priceMax === "" ? priceRange.max : priceMax;
+  const span = Math.max(1, priceRange.max - priceRange.min);
+  const leftPct  = ((sliderMin - priceRange.min) / span) * 100;
+  const rightPct = ((priceRange.max - sliderMax) / span) * 100;
+
   // Filter
   const filtered = useMemo(() => {
     const q = filterText.trim().toLowerCase();
@@ -190,18 +207,51 @@ export default function SearchPageTemplate({
                 <Accordion.Item eventKey="price">
                   <Accordion.Header>Price</Accordion.Header>
                   <Accordion.Body>
+                    {/* Dual-handle range slider */}
+                    <div className="cl-price-slider mb-2">
+                      <div className="cl-price-slider-track" />
+                      <div
+                        className="cl-price-slider-range"
+                        style={{ left: `${leftPct}%`, right: `${rightPct}%` }}
+                      />
+                      <input
+                        type="range"
+                        aria-label="Minimum price"
+                        min={priceRange.min}
+                        max={priceRange.max}
+                        value={sliderMin}
+                        onChange={(e) => {
+                          const v = Math.min(Number(e.target.value), sliderMax);
+                          setPriceMin(v === priceRange.min ? "" : v);
+                          setPage(1);
+                        }}
+                      />
+                      <input
+                        type="range"
+                        aria-label="Maximum price"
+                        min={priceRange.min}
+                        max={priceRange.max}
+                        value={sliderMax}
+                        onChange={(e) => {
+                          const v = Math.max(Number(e.target.value), sliderMin);
+                          setPriceMax(v === priceRange.max ? "" : v);
+                          setPage(1);
+                        }}
+                      />
+                    </div>
                     <Row className="g-2">
                       <Col xs={6}>
                         <Form.Label className="cl-filter-label">MIN</Form.Label>
                         <Form.Control
                           type="number"
-                          min={0}
+                          min={priceRange.min}
+                          max={priceRange.max}
                           value={priceMin}
                           onChange={(e) => {
                             setPriceMin(e.target.value === "" ? "" : Number(e.target.value));
                             setPage(1);
                           }}
-                          placeholder="0"
+                          placeholder={String(priceRange.min)}
                           size="sm"
                         />
                       </Col>
@@ -209,13 +259,14 @@ export default function SearchPageTemplate({
                         <Form.Label className="cl-filter-label">MAX</Form.Label>
                         <Form.Control
                           type="number"
-                          min={0}
+                          min={priceRange.min}
+                          max={priceRange.max}
                           value={priceMax}
                           onChange={(e) => {
                             setPriceMax(e.target.value === "" ? "" : Number(e.target.value));
                             setPage(1);
                           }}
-                          placeholder="9999"
+                          placeholder={String(priceRange.max)}
                           size="sm"
                         />
                       </Col>

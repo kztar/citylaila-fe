@@ -662,6 +662,74 @@ a {
   margin-bottom: .25rem;
 }
 
+/* Dual-handle price range slider
+   Two layered <input type="range"> elements share a track; the visible
+   track + the highlighted "range" segment are absolutely-positioned divs. */
+.cl-price-slider {
+  position: relative;
+  height: 28px;
+}
+.cl-price-slider-track {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--cl-border-light);
+  border-radius: 2px;
+}
+.cl-price-slider-range {
+  position: absolute;
+  top: 12px;
+  height: 4px;
+  background: var(--cl-cta);
+  border-radius: 2px;
+}
+.cl-price-slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  pointer-events: none;
+  margin: 0;
+}
+.cl-price-slider input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+  border: 0;
+}
+.cl-price-slider input[type="range"]::-moz-range-track {
+  background: transparent;
+  border: 0;
+}
+.cl-price-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--cl-cta);
+  cursor: pointer;
+  margin-top: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+}
+.cl-price-slider input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--cl-cta);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .15);
+}
+.cl-price-slider input[type="range"]:focus { outline: none; }
+
 /* Sort bar */
 .cl-sort-bar {
   background: #fff;
