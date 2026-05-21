@@ -16,15 +16,17 @@ const navLinks = [
   { label: "Contact Us", href: "/contact-us" },
 ];
 
+// All Categories dropdown — clean `/category/[slug]` URLs (per ROADMAP F3).
+// "Desert Safari Tours" links to an attraction detail page (ROADMAP F3.d, not yet built);
+// it will 404 until that feature ships.
 const categoryDropdown = [
-  { label: "City Tours", href: "/city-tours/tours-by-type/city-tours-290159.aspx" },
-  { label: "Adventure Tours", href: "/city-tours/tours-by-type/Adventure-Tours-290170.aspx" },
-  { label: "Theme Parks", href: "/city-tours/tours-by-type/Theme-Parks-11692.aspx" },
-  { label: "Dhow Cruise", href: "/city-tours/tours-by-type/Dhow-Cruise-289851.aspx" },
-  { label: "Desert Safari Tours", href: "/city-tour/tour-details/Desert-Safari-Dubai-Online-Tickets-13247.aspx" },
-  { label: "Water Activities", href: "/city-tours/tours-by-type/Water-Activities-289867.aspx" },
-  { label: "Combo Deals", href: "/combo-deals" },
-  { label: "Free Ticket Offer", href: "/Free-Ticket-Offer" },
+  { label: "City Tours",               href: "/category/city-tours" },
+  { label: "Adventure Tours",          href: "/category/adventure-tours" },
+  { label: "Dhow Cruise",              href: "/category/dhow-cruise" },
+  { label: "Desert Safari Tours",      href: "/attractions/red-dune-desert-safari" },
+  { label: "Private Airport Transfer", href: "/category/airport-transfers" },
+  { label: "Cruise and Boat Tours",    href: "/category/cruise-and-boat-tours" },
+  { label: "Water Activities",         href: "/category/water-activities" },
 ];
 
 const languages = [

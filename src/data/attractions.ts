@@ -326,18 +326,6 @@ export const attractions: Attraction[] = [
   },
 ];
 
-export const categories = [
-  { label: "Adventure", slug: "adventure", icon: "🏄" },
-  { label: "Cruises & Boat Tours", slug: "cruises-boat-tours", icon: "🚢" },
-  { label: "Food & Drinks", slug: "food-drinks", icon: "🍽️" },
-  { label: "Local Attractions", slug: "local-attractions", icon: "🏛️" },
-  { label: "Theme Parks", slug: "theme-parks", icon: "🎡" },
-  { label: "Water Park & Sports", slug: "water-park-and-sports", icon: "💦" },
-  { label: "Kid Friendly", slug: "kid-friendly", icon: "👨‍👩‍👧" },
-  { label: "Desert & Outdoor", slug: "desert-outdoor-activities", icon: "🏜️" },
-  { label: "Free Ticket Offer", slug: "free-ticket-offer", icon: "🎫" },
-];
-
 export const cities = [
   {
     name: "Dubai",

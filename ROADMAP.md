@@ -24,27 +24,7 @@ Tick items off (`[ ]` → `[x]`) and move them to the **Done** section when ship
 
 ### ~~F2. Search Page Template + `/search` route~~ — moved to **Done** below ✅
 
-### F3. Category-dropdown destination pages (Header → All Categories ▾)
-
-- **What**: 6 of the 7 items in the **All Categories** dropdown lead to listing pages that share the **Search Page Template** (F2). The 7th item (Desert Safari Tours) is a single-attraction detail page, not a listing.
-
-| # | Dropdown label | Live URL | Template |
-|---|---|---|---|
-| a | City Tours | `/city-tours/tours-by-type/city-tours-290159.aspx` | Search Page Template |
-| b | Adventure Tours | `/city-tours/tours-by-type/adventure-tours-290170.aspx` | Search Page Template |
-| c | Dhow Cruise | `/city-tours/tours-by-type/dhow-cruise-289851.aspx` | Search Page Template |
-| d | **Desert Safari Tours** | `/city-tour/tour-details/desert-safari-dubai-online-tickets-13247.aspx` | **Attraction Detail Page** (different — see F3.d) |
-| e | Private Airport Transfer | `/city-tours/tours-by-type/airport-transfers-290165.aspx` | Search Page Template |
-| f | Cruise and Boat Tours | `/city-tours/tours-by-type/cruise-and-boat-tours-290172.aspx` | Search Page Template |
-| g | Water Activities | `/city-tours/tours-by-type/water-activities-289867.aspx` | Search Page Template |
-
-- **What we need to build**:
-  - Decide on a clean URL strategy. Two viable options:
-    - (i) Replicate the live URLs verbatim (`/city-tours/tours-by-type/[slug].aspx`) using a catch-all dynamic route. Painful but mimics the upstream.
-    - (ii) Use our own clean URLs (`/category/city-tours`, etc.) and keep the dropdown labels mapped via the existing `categoryDropdown` array in [Header.tsx](src/components/Header.tsx). **Recommended**.
-  - For options **a, b, c, e, f, g**: a single shared route renders the Search Page Template seeded with the right `attractions` subset and title.
-  - For option **d (Desert Safari Tours)**: a separate **Attraction Detail Page** (not yet built). This is its own feature — track it as **F3.d** below.
-- **Dependencies**: **F2** must be built first.
+### ~~F3. Category-dropdown destination pages~~ — moved to **Done** below ✅ (F3.d still pending separately)
 
 ### F3.d. Attraction Detail Page
 
@@ -87,6 +67,33 @@ Recorded so we know not to "fix" them by faithfully matching the upstream:
 ---
 
 ## Done
+
+### F3. Category-dropdown listing pages ✅ (2026-05-21)
+
+The 6 listing entries from the Header → All Categories ▾ dropdown ship as `/category/[slug]` static routes, all rendered by `SearchPageTemplate`. F3.d (Desert Safari Tours → attraction detail page) is **not** in this delivery — see F3.d below in Open.
+
+| Dropdown label | New clean URL | Status |
+|---|---|---|
+| City Tours | `/category/city-tours` | ✅ |
+| Adventure Tours | `/category/adventure-tours` | ✅ |
+| Dhow Cruise | `/category/dhow-cruise` | ✅ |
+| Desert Safari Tours | `/attractions/red-dune-desert-safari` | ⚠️ 404 until F3.d ships |
+| Private Airport Transfer | `/category/airport-transfers` | ✅ (empty state — no data) |
+| Cruise and Boat Tours | `/category/cruise-and-boat-tours` | ✅ |
+| Water Activities | `/category/water-activities` | ✅ |
+
+- **URL decision**: shipped clean `/category/[slug]` URLs (recommended option in F3), not the live site's `/city-tours/tours-by-type/[…].aspx` paths.
+- New data: [src/data/tourCategories.ts](src/data/tourCategories.ts) — `TourCategory { slug, label, description, attractionCategories: string[] }`. 6 entries, each mapping to one or more `Attraction.category` values used for filtering. Functions intentionally avoided so the data file stays serializable.
+- Refactored: [src/app/category/[slug]/page.tsx](src/app/category/[slug]/page.tsx) — server component. `generateStaticParams` returns the 6 F3 slugs (down from the legacy 9). `generateMetadata` derives title + description from `tourCategories`. Page body is just a `<SearchPageTemplate>` render with `attractions` filtered by `attractionCategories`, plus a category-specific `emptyMessage` for slugs that currently have no data (e.g. `airport-transfers`).
+- Updated: [src/components/Header.tsx](src/components/Header.tsx) — `categoryDropdown` rewritten to the 7 F3 items with clean `/category/<slug>` hrefs (Desert Safari Tours points to `/attractions/red-dune-desert-safari`).
+- **Deleted** (no longer used):
+  - [src/components/CategoryPills.tsx](src/components/CategoryPills.tsx) — the new pages use `SearchPageTemplate`'s built-in sidebar Tour Category filter instead.
+  - [src/components/FeaturedAttractions.tsx](src/components/FeaturedAttractions.tsx) — never used anywhere after the page refactor; dead code.
+  - `export const categories` from [src/data/attractions.ts](src/data/attractions.ts) — only consumers were the two deleted files.
+- **Breaking URL changes** for anyone with old `/category/<legacy-slug>` bookmarks: the 9 previous slugs (`adventure`, `cruises-boat-tours`, `food-drinks`, `local-attractions`, `theme-parks`, `water-park-and-sports`, `kid-friendly`, `desert-outdoor-activities`, `free-ticket-offer`) now 404. Acceptable for a clone project; can add redirects later if needed.
+- Build verification: `npm run build` ✓ — 15 static pages (was 18; net -3 because 9 legacy category pages → 6 new ones).
+
+### F3.d. Attraction Detail Page (still pending — see Open section above)
 
 ### F1. `/packages` page ✅ (2026-05-20, redesigned 2026-05-20 against `references/packages/`)
 

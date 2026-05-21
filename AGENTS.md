@@ -54,6 +54,7 @@ Derived from screenshots and HTML source. Implement sections **in this exact ord
 
 - **Logo**: CDN image (`/assets/WhitelableLogo/1/2/logo.webp`). The pink-red wordmark only appears as a fallback in the mobile-drawer header.
 - **Nav links** (left to right): Home · Activities · Packages · Visa · All Categories ▼ · Contact Us
+- **All Categories ▼ dropdown** (per ROADMAP F3): City Tours · Adventure Tours · Dhow Cruise · Desert Safari Tours · Private Airport Transfer · Cruise and Boat Tours · Water Activities. All entries point to `/category/<slug>` except **Desert Safari Tours** which points to `/attractions/red-dune-desert-safari` (an attraction detail route that doesn't exist yet — F3.d).
 - **Right side**: language dropdown · currency dropdown · cart icon (0) · "Log in / sign up" button (orange, pill-shaped)
   - **Language dropdown** (`react-bootstrap` `Dropdown` with `.cl-header-dd` chrome): shows `🇦🇪 EN ▾`; menu items list English (🇦🇪 EN), Arabic (🇸🇦 AR), Russian (🇷🇺 RU), Spanish (🇪🇸 ES), Chinese (🇨🇳 ZH), and French (🇫🇷 FR). Active item is highlighted in `cl-bg-light` with primary-blue text.
   - **Currency dropdown**: shows `AED ▾`; menu lists 12 currencies — AED, USD, EUR, GBP, SAR, INR, MYR, OMR, THB, NZD, EGP, KWD. Each row shows code (bold) + full name (secondary grey) on the left, and the **actual currency symbol** right-aligned (`.cl-currency-symbol`) — e.g. `AED  UAE Dirham                                  د.إ`. No em-dash separator.
@@ -321,7 +322,6 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | WorldDestinationsCarousel | `src/components/WorldDestinationsCarousel.tsx` | "Explore world's top destinations" carousel for `/packages`. `.cl-world-dest` tile = square-rounded image with country name **below** (no overlay text). Tiles link to `/search?q=<country>`. |
 | HappyClientsSection | `src/components/HappyClientsSection.tsx` | "Our happy clients" — `Row`/`Col` 4-up **grid** (not a carousel) of `.cl-client-card`s. Each card has dark-navy bg, circular avatar, white quote, orange client name. |
 | ReadingCornerCarousel | `src/components/ReadingCornerCarousel.tsx` | "Reading Corner" carousel for `/packages`. `.cl-reading-card` = image-on-top + title (2-line clamp) with an orange underline accent below. |
-| CategoryPills | `src/components/CategoryPills.tsx` | Bootstrap `sticky-top`, scrollable pill row, `btn-cta` for active state |
 
 ### Pages
 
@@ -331,7 +331,7 @@ The codebase has been fully migrated from **Tailwind CSS v4** to **Bootstrap 5.3
 | `/about-us` | `src/app/about-us/page.tsx` | `Container` + `Row`/`Col`, hero with overlay, stats strip, story, values |
 | `/contact-us` | `src/app/contact-us/page.tsx` | `react-bootstrap` `Form` (`Form.Control`, `Form.Select`), 4 office cards |
 | `/faqs` | `src/app/faqs/page.tsx` | `react-bootstrap` `Accordion` |
-| `/category/[slug]` | `src/app/category/[slug]/page.tsx` | `cl-page-hero` + `CategoryPills` + 4-col `Row`/`Col` grid |
+| `/category/[slug]` | `src/app/category/[slug]/page.tsx` | Server component. `generateStaticParams` returns the 6 `tourCategories` slugs (city-tours, adventure-tours, dhow-cruise, airport-transfers, cruise-and-boat-tours, water-activities). Renders `SearchPageTemplate` with attractions filtered by `attractionCategories`. Data in `src/data/tourCategories.ts`. |
 | `/search` | `src/app/search/page.tsx` (server, `metadata`) + `src/app/search/SearchResults.tsx` (client, `useSearchParams`) | Reads `?q=` and renders `SearchPageTemplate`. Wrapped in `<Suspense>` (required by Next 16 static export when consuming `useSearchParams`). |
 | `/packages` | `src/app/packages/page.tsx` | Holiday-packages landing page (matches `references/packages/screenshot-scroll-{1,2,3}.png`). Assembles 5 sections: `PackagesHero` → `JackpotDealsCarousel` → `WorldDestinationsCarousel` → `HappyClientsSection` (grid) → `ReadingCornerCarousel`. Data in `src/data/packages.ts`. |
 
